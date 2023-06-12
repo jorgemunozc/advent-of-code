@@ -32,6 +32,7 @@ fn parse_instruction(raw_instruction: &str) -> Instruction {
 }
 
 fn move_pos(current_pos: &mut Position, instruction: Instruction) -> Vec<(i32, i32)> {
+    //Precomputed values for the 4 angles we know we always get
     let cos = [1, 0, -1, 0];
     let sin = [0, 1, 0, -1];
     let mut visited_points: Vec<(i32, i32)> = Vec::new();
