@@ -33,28 +33,17 @@ function getWireValue(string $targetWireId, array &$instructions, array &$knownV
         3 => [$operationSegments[0], $operationSegments[2]],
         default => []
     };
-    switch ($gate) {
-        case 'AND':
-            $result = getWireValue($operands[0], $instructions, $knownValuesInCircuit) & getWireValue($operands[1], $instructions, $knownValuesInCircuit);
-            break;
-        case 'OR':
-            $result = getWireValue($operands[0], $instructions, $knownValuesInCircuit) | getWireValue($operands[1], $instructions, $knownValuesInCircuit);
-            break;
-        case 'NOT':
-            $result = ~ getWireValue($operands[0], $instructions, $knownValuesInCircuit) & 0xFFFF;
-            break;
-        case 'LSHIFT':
-            $result = getWireValue($operands[0], $instructions, $knownValuesInCircuit) << (int)$operands[1];
-            break;
-        case 'RSHIFT':
-            $result = getWireValue($operands[0], $instructions, $knownValuesInCircuit) >> (int)$operands[1];
-            break;
-        case '':
-            $result = getWireValue($operands[0], $instructions, $knownValuesInCircuit);
-            break;
-        default:
-            $result = -1;
-    }
+    $result = match ($gate) {
+        'AND' => getWireValue($operands[0], $instructions, $knownValuesInCircuit)
+            & getWireValue($operands[1], $instructions, $knownValuesInCircuit),
+        'OR' => getWireValue($operands[0], $instructions, $knownValuesInCircuit)
+            | getWireValue($operands[1], $instructions, $knownValuesInCircuit),
+        'NOT' => ~ getWireValue($operands[0], $instructions, $knownValuesInCircuit) & 0xFFFF,
+        'LSHIFT' => getWireValue($operands[0], $instructions, $knownValuesInCircuit) << (int)$operands[1],
+        'RSHIFT' => getWireValue($operands[0], $instructions, $knownValuesInCircuit) >> (int)$operands[1],
+        '' => getWireValue($operands[0], $instructions, $knownValuesInCircuit),
+        default => - 1,
+    };
     $knownValuesInCircuit[$targetWireId] = $result;
     return $result;
 }
