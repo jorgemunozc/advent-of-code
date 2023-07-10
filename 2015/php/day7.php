@@ -42,7 +42,7 @@ function getWireValue(string $targetWireId, array &$instructions, array &$knownV
         'LSHIFT' => getWireValue($operands[0], $instructions, $knownValuesInCircuit) << (int)$operands[1],
         'RSHIFT' => getWireValue($operands[0], $instructions, $knownValuesInCircuit) >> (int)$operands[1],
         '' => getWireValue($operands[0], $instructions, $knownValuesInCircuit),
-        default => - 1,
+        default => throw new Exception('Invalid operation'),
     };
     $knownValuesInCircuit[$targetWireId] = $result;
     return $result;
